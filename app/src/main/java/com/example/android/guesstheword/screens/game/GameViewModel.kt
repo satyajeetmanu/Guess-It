@@ -47,7 +47,7 @@ class GameViewModel : ViewModel(){
         resetList()
         nextWord()
         _score.value = 0
-        _word.value = ""
+        _word.value = wordList.removeAt(0)
         _hasFinished.value = false
         _currentTime.value = 10
 
