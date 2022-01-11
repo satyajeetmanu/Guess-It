@@ -8,6 +8,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
+private val CORRECT_BUZZ_PATTERN = longArrayOf(100, 100, 100, 100, 100, 100)
+private val PANIC_BUZZ_PATTERN = longArrayOf(0, 200)
+private val GAME_OVER_BUZZ_PATTERN = longArrayOf(0, 2000)
+private val NO_BUZZ_PATTERN = longArrayOf(0)
+
+enum class BuzzType(val pattern: LongArray) {
+    CORRECT(CORRECT_BUZZ_PATTERN),
+    GAME_OVER(GAME_OVER_BUZZ_PATTERN),
+    COUNTDOWN_PANIC(PANIC_BUZZ_PATTERN),
+    NO_BUZZ(NO_BUZZ_PATTERN)
+}
+
 class GameViewModel : ViewModel(){
 
     companion object {
@@ -34,6 +46,10 @@ class GameViewModel : ViewModel(){
     val hasFinished : LiveData<Boolean>
         get() = _hasFinished
 
+    private val _buzz = MutableLiveData<BuzzType>()
+    val buzz : LiveData<BuzzType>
+        get() = _buzz
+
     private val _currentTime = MutableLiveData<Long>()
     val currentTime : LiveData<Long>
         get() = _currentTime
@@ -46,7 +62,6 @@ class GameViewModel : ViewModel(){
     private lateinit var wordList: MutableList<String>
 
     private val timer : CountDownTimer
-
 
     init{
         Log.i("GameViewModel","GameViewModel created")
@@ -61,11 +76,15 @@ class GameViewModel : ViewModel(){
 
             override fun onTick(millisUntilFinished: Long) {
                 _currentTime.value = (currentTime.value)?.minus(1)
+                if(_currentTime.value!! <= 5){
+                    _buzz.value = BuzzType.COUNTDOWN_PANIC
+                }
             }
 
             override fun onFinish() {
                 _currentTime.value = 0
                 _hasFinished.value = true
+                _buzz.value = BuzzType.GAME_OVER
             }
         }
 
@@ -127,10 +146,15 @@ class GameViewModel : ViewModel(){
 
     fun onCorrect() {
         _score.value = (score.value)?.plus(1)
+        _buzz.value = BuzzType.CORRECT
         nextWord()
     }
 
-    fun gameFinishedComplete(){
+    fun gameFinishedComplete() {
         _hasFinished.value = false
     }
+
+//    fun onBuzzComplete(){
+//        _buzz.value = BuzzType.NO_BUZZ
+//    }
 }
