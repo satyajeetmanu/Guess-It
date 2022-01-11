@@ -56,14 +56,19 @@ class GameFragment : Fragment() {
 
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
+        // setting data binding for viewModel allows us to call ViewModel's methods from the
+        // xml layout file directly, without setting up OnClickListeners
         binding.gameViewModel = gameViewModel
+        binding.lifecycleOwner = this
 
-        gameViewModel.score.observe(viewLifecycleOwner, Observer{   newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
-        gameViewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.wordText.text = newWord
-        })
+//        gameViewModel.score.observe(viewLifecycleOwner, Observer{   newScore ->
+//            binding.scoreText.text = newScore.toString()
+//        })
+//
+//        gameViewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
+//            binding.wordText.text = newWord
+//        })
+
         gameViewModel.hasFinished.observe(viewLifecycleOwner, Observer { hasFinished ->
             if(hasFinished){
                 gameFinished()

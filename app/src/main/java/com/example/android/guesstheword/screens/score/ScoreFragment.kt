@@ -58,11 +58,15 @@ class ScoreFragment : Fragment() {
         scoreViewModel =
             ViewModelProvider(this, scoreViewModelFactory).get(ScoreViewModel::class.java)
 
+        // setting data binding for viewModel allows us to call ViewModel's methods from the
+        // xml layout file directly, without setting up OnClickListeners
         binding.scoreViewModel = scoreViewModel
+        binding.lifecycleOwner = this
 
-        scoreViewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
+//        scoreViewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
+//            binding.scoreText.text = newScore.toString()
+//        })
+
         scoreViewModel.playAgain.observe(viewLifecycleOwner, Observer { currPlayAgain ->
             if (currPlayAgain) {
                 findNavController().navigate(ScoreFragmentDirections.actionRestart())
