@@ -75,9 +75,10 @@ class GameFragment : Fragment() {
                 gameViewModel.gameFinishedComplete()
             }
         })
-        gameViewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
-            binding.timerText.text = DateUtils.formatElapsedTime(newTime)
-        })
+
+//        gameViewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
+//            binding.timerText.text = DateUtils.formatElapsedTime(newTime)
+//        })
 
         return binding.root
 
